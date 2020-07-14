@@ -1,13 +1,37 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
+  text-align: center;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  background: url("https://www.faarmembers.com/wp-content/uploads/2019/01/trivia-background.jpg");
+}
+
+.q-num {
+  margin: 5% 0;
+  font-weight: bold;
+  font-size: large;
+}
+
+.question {
+  font-size: 1.25em;
+  padding: 5% 0;
+  margin: 0 5%;
+  display: block;
+  text-decoration: underline;
+  background-color: rgba(255, 228, 196, .7);
+}
+
+.next-container, .correct-ans {
+  margin-top: 50px;
+  display: none;
+  justify-content: center;
+}
+
+.options-div {
+  justify-content: center;
+  display: inline;
+}
+
+.option-btn {
+  margin-top: 20px;
 }
