@@ -4,6 +4,8 @@ Trivia Game
 
 Data is fetched from https://opentdb.com/
 
+Solution available at [https://martinhorn1.github.io/trivia-game/]
+
 ## Installation and Setup Instructions
 
 Clone this repository. You will need `node` and `npm` installed globally on your machine.
