@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import he from 'he';
 
 function App() {
 
   const [items, setItems] = useState([]);
+  const [answers, setAnswers] = useState([]);
   const [clickable, setClickable] = useState(true);
   const [count, setCount] = useState(1);
   const [correct, setCorrect] = useState(0);
@@ -15,28 +17,33 @@ function App() {
     fetch(BASE_URL)
       .then(res => res.json())
       .then(json => setItems(json.results))
-  }, [count])
+  }, [count]);
   
   useEffect(() => {
-    if ((correct + wrong) === count) {
-      document.getElementsByClassName("correct-ans")[0].style.display = "block";
-      document.getElementsByClassName("next-container")[0].style.display = "block";
+    [...document.querySelectorAll(".correct-ans, .next-container")].map(elem => elem.style.display = "block");
+  }, [correct, wrong]);
+  
+  useEffect(() => {
+    if (items[0] !== undefined) {
+      var answers = items[0].incorrect_answers.concat(items[0].correct_answer);
+      for (let i = answers.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [answers[i], answers[j]] = [answers[j], answers[i]];
+      }
+      setAnswers(answers);
     }
-  })
+  }, [items]);
+
+  useEffect(() => {
+    if (!clickable) {
+      var correct_answer = [...document.getElementsByClassName('option-btn')].filter(elem => elem.innerHTML === items[0].correct_answer)[0];
+      correct_answer.style.backgroundColor = "#0d0";
+    }
+  }, [items, clickable]);
 
   function nextQuestion() {
     setCount(count + 1);
     setClickable(true);
-  }
-
-  function sortAnswers() {
-    var answers = items[0].incorrect_answers.concat(items[0].correct_answer);
-
-    for (let i = answers.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [answers[i], answers[j]] = [answers[j], answers[i]];
-    }
-    return answers;
   }
   
   function showCorrect(selected) {
@@ -52,22 +59,21 @@ function App() {
   return (
     <>
       {items.map(item => {
-        const answers = sortAnswers();
-
         return <div className="content" key={uuidv4()}>
           <div className="q-num">Question number {count}</div>
           <div>Correct answers: {correct}</div>
           <div>Wrong answers: {wrong}</div>
-          <div className="question" dangerouslySetInnerHTML={{__html: item.question}}></div>
+          <div className="question">{he.decode(item.question)}</div>
 
           <div className="options-group">
             {answers.map(option => {
-              return <div className="option-btn" onClick={() => clickable ? showCorrect(option) : null} key={uuidv4()} dangerouslySetInnerHTML={{ __html: option }}></div>
+              return <div className="option-btn" onClick={() => clickable ? showCorrect(option) : null} key={uuidv4()}>{he.decode(option)}</div>
             })}
           </div>
           
-          <div className="correct-ans">Correct answer: {item.correct_answer}</div>
-          <div className="correct-ans" dangerouslySetInnerHTML={{ __html: item.correct_answer }}></div>
+          <div className="correct-ans">
+            <div>Correct answer: {he.decode(item.correct_answer)}</div>
+          </div>
           <div className="next-container">
             <div onClick={nextQuestion}>Next Question</div>
           </div>

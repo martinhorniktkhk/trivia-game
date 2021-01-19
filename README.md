@@ -4,7 +4,7 @@ Trivia Game
 
 Data is fetched from https://opentdb.com/
 
-Solution available at [https://martinhorn1.github.io/trivia-game/]
+Solution available at https://martinhorn1.github.io/trivia-game/
 
 ## Installation and Setup Instructions
 
