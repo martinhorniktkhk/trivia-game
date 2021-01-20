@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import ReactLoading from 'react-loading';
 import { v4 as uuidv4 } from 'uuid';
 import he from 'he';
 
 function App() {
 
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [clickable, setClickable] = useState(true);
@@ -16,7 +19,15 @@ function App() {
   useEffect(() => {
     fetch(BASE_URL)
       .then(res => res.json())
-      .then(json => setItems(json.results))
+      .then(json => {
+        setIsLoaded(true);
+        setItems(json.results)
+      },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
   }, [count]);
   
   useEffect(() => {
@@ -44,6 +55,7 @@ function App() {
   function nextQuestion() {
     setCount(count + 1);
     setClickable(true);
+    setIsLoaded(false);
   }
   
   function showCorrect(selected) {
@@ -56,7 +68,13 @@ function App() {
     }
   }
 
-  return (
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+  else if (!isLoaded) {
+    return <ReactLoading type="spin" color="#f50" />
+  }
+  else return (
     <>
       {items.map(item => {
         return <div className="content" key={uuidv4()}>
